@@ -8,6 +8,7 @@ import { User } from 'src/users/users.model';
 import { UserService } from 'src/users/users.service';
 import { comparePassword, hashPassword } from 'src/utils/passHash';
 import { LoginUserDTO } from './auth.model';
+import validateEmail from 'src/utils/validateEmail';
 
 export type AuthResult = { accessToken: string; user: UserDTO };
 export type UserDTO = Omit<User, 'password'> & { password?: string };
@@ -48,6 +49,10 @@ export class AuthService {
 
   async register(user: User) {
     try {
+      if (!user.password || user.password.length < 8)
+        throw new BadRequestException('Invalid password');
+      if (!validateEmail(user.email.trim()))
+        throw new BadRequestException('Invalid Email');
       const hashedPassword = await hashPassword(user.password);
       user.password = hashedPassword;
       const newUser = await this.userService.create(user);

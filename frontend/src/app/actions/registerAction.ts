@@ -1,10 +1,11 @@
 "use server";
 
 import api from "@/service/api";
+import validateEmail from "@/utils/validateEmail";
 import { AxiosError } from "axios";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 
 type FieldsErrors = {
   firstName?: string;
@@ -13,10 +14,10 @@ type FieldsErrors = {
 };
 
 export default async function registerAction(formData: FormData) {
-  const firstName = formData.get("firstName");
-  const lastName = formData.get("lastName");
-  const email = formData.get("email");
-  const password = formData.get("password");
+  const firstName = formData.get("firstName")?.toString()?.trim() || "";
+  const lastName = formData.get("lastName")?.toString()?.trim() || "";
+  const email = formData.get("email")?.toString()?.trim() || "";
+  const password = formData.get("password")?.toString() || "";
 
   if (
     !firstName ||
@@ -26,15 +27,16 @@ export default async function registerAction(formData: FormData) {
   ) {
     const errors: FieldsErrors = {};
     if (!firstName) errors.firstName = "Required Field";
+    if (!validateEmail(email)) errors.email = "Please enter a valid email";
     if (!email) errors.email = "Required Field";
+    if (password.length < 8)
+      errors.password = "Password must be at least 8 characters in length";
     if (!password) errors.password = "Required Field";
-    if (password && password.toString().length < 8)
-      errors.password = "Password must be more than 8 characters in length";
 
     const errorString = Object.entries(errors)
       .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
       .join("&");
-    redirect(`/register?${errorString}`);
+    redirect(`/register?${errorString}`, RedirectType.replace);
   }
 
   try {

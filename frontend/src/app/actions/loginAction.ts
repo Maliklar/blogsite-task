@@ -4,6 +4,7 @@ import { LoginRequest } from "@/service/@apitypes/AuthType";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AxiosError } from "axios";
+import validateEmail from "@/utils/validateEmail";
 
 export default async function loginAction(formData: FormData) {
   const body: LoginRequest = {
@@ -11,13 +12,19 @@ export default async function loginAction(formData: FormData) {
     password: formData.get("password") as string,
   };
 
-  const email = formData.get("email");
-  const password = formData.get("password");
+  const email = formData.get("email")?.toString()?.trim() || "";
+  const password = formData.get("password")?.toString() || "";
 
-  if (!email || !password) {
+  const isValidEmail = validateEmail(email);
+
+  if (!email || !password || password.length < 8 || !isValidEmail) {
     const errors: { email?: string; password?: string } = {};
+    if (!isValidEmail) errors.email = "Please enter a correct email address";
     if (!email) errors.email = "Email required";
     if (!password) errors.password = "Email required";
+    if (password.length < 8)
+      errors.password = "Password must be at least 8 characters";
+
     const errorString = Object.entries(errors)
       .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
       .join("&");

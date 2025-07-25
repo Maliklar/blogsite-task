@@ -16,12 +16,16 @@ export default async function createBlogAction(
 ): Promise<State> {
   const errors: Partial<CreateBlog> = {};
   const body: CreateBlog = {
-    title: formData.get("title") as string,
-    content: formData.get("content") as string,
+    title: formData.get("title")?.toString()?.trim() || "",
+    content: formData.get("content")?.toString()?.trim() || "",
   };
 
   if (!body.title) errors.title = "Title is required";
   if (!body.content) errors.content = "Content is required";
+  if (body.title?.length && (body.title.length < 10 || body.title.length > 30))
+    errors.title = "Title must be between 10 and 30 characters";
+  if (body.content && (body.content.length < 30 || body.content.length > 5000))
+    errors.content = "Content must be between 30 and 5000 words";
 
   if (Object.keys(errors).length > 0)
     return {

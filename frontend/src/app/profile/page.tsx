@@ -1,9 +1,13 @@
 import BlogCard from "@/components/Cards/BlogCard";
 import Container from "@/components/Layout/Container";
 import Section from "@/components/Layout/Section";
+import getUser from "@/lib/getUser";
 import api from "@/service/api";
+import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
+  const user = await getUser();
+  if (!user) redirect("/");
   const { data } = await api.blogs.getMy();
 
   return (

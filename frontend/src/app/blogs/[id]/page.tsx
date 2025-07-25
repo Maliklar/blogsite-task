@@ -20,13 +20,15 @@ export default async function BlogPage({ params }: Props) {
           <FaQuoteRight className="text-gray-300" size={80} />
         </span>
 
-        <section className="flex flex-col gap-4 flex-1">
+        <section className="flex flex-col gap-4 flex-1 overflow-hidden">
           <h2 className="text-3xl font-bold capitalize">{data.title}</h2>
 
-          <p>{data.content}</p>
+          <p className="truncate text-wrap whitespace-pre-wrap">
+            {data.content}
+          </p>
 
           <hr />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 overflow-hidden">
             <div className="flex items-center justify-center bg-gray-100 rounded-full aspect-square h-[70px] w-[70px]">
               <MdPerson size={60} className="text-gray-500" />
             </div>
