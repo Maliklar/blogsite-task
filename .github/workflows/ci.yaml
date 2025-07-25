@@ -33,6 +33,7 @@ jobs:
           version: 10.13.1
 
       - run: pnpm install
+      - run: pnpm --filter frontend run lint
       - run: pnpm --filter frontend run test
       - run: pnpm --filter frontend run build
 
@@ -51,4 +52,3 @@ jobs:
       - run: pnpm --filter backend prisma:push
       - run: pnpm --filter backend lint
       - run: pnpm --filter backend run build
-      - run: pnpm --filter backend run start:prod
