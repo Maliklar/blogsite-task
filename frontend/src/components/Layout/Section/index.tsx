@@ -5,7 +5,7 @@ import { FaArrowRight } from "react-icons/fa";
 type Props = {
   title: string;
   subTitle: string;
-  link: string;
+  link?: string;
   children: ReactNode;
 };
 export default function Section({ title, subTitle, link, children }: Props) {
@@ -16,14 +16,16 @@ export default function Section({ title, subTitle, link, children }: Props) {
           <h2 className="text-xl font-bold">{title}</h2>
           <p className="text-sm font-bold text-gray-700">{subTitle}</p>
         </div>
-        <Button.Link
-          variant="secondary"
-          size="small"
-          href={link}
-          suffix={<FaArrowRight />}
-        >
-          View More
-        </Button.Link>
+        {link ? (
+          <Button.Link
+            variant="secondary"
+            size="small"
+            href={link}
+            suffix={<FaArrowRight />}
+          >
+            View More
+          </Button.Link>
+        ) : null}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {children}

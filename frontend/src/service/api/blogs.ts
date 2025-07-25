@@ -16,6 +16,9 @@ const blogs = {
   async get(id: number) {
     return serverInstance.get<Blog>(`/api/blogs/${id}`);
   },
+  async getMy() {
+    return serverInstance.get<DetailedBlog[]>("/api/blogs/user/get");
+  },
 
   async create(body: CreateBlog) {
     return serverInstance.post<Blog>("/api/blogs", body);
