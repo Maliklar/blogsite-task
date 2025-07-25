@@ -43,7 +43,7 @@ export default async function LoginPage({ searchParams }: Props) {
           Login
         </h1>
         <InputField
-          type="text"
+          type="email"
           name="email"
           label="Email"
           error={emailError}
