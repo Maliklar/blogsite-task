@@ -29,7 +29,6 @@ export class AuthService {
   async validateUser({ email, password }: LoginUserDTO) {
     try {
       const user = await this.userService.getByEmail(email, false);
-      console.log(user);
       if (!user) throw new UnauthorizedException();
 
       const compareResult = await comparePassword(password, user.password);
@@ -55,8 +54,7 @@ export class AuthService {
       if (!newUser) throw new BadRequestException();
       this.toUserDTO(newUser);
       return await this.signIn(newUser);
-    } catch (e) {
-      console.log(e);
+    } catch {
       throw new BadRequestException();
     }
   }

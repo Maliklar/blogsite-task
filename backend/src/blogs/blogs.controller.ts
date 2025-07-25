@@ -36,7 +36,6 @@ export class BlogsController {
   @Post()
   @ApiResponse({ type: CreateBlogDTO })
   create(@Body() data: CreateBlogDTO, @Request() request: AuthRequest) {
-    console.log('datadatadata', request.body);
     return this.blogsService.create(data, request.user);
   }
 
@@ -44,7 +43,6 @@ export class BlogsController {
   @UseGuards(AuthGuard)
   @Put()
   update(@Body() data: UpdateBlogDTO, @Request() request: AuthRequest) {
-    console.log('datadatadata', request.body);
     return this.blogsService.update(data, request.user);
   }
 
