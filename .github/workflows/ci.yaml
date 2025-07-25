@@ -18,49 +18,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - uses: pnpm/action-setup@v2
         with:
           version: 10.13.1
-
       - uses: actions/setup-node@v3
         with:
           node-version: 20
           cache: 'pnpm'
-
       - run: pnpm install
 
   frontend:
     needs: setup
     runs-on: ubuntu-latest
+    container: ghcr.io/railwayapp/cli:latest
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_SECRET_KEY }}
+      SVC_ID: frontend
     steps:
       - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 10.13.1
-      - run: pnpm install
-      - name: Set NEXT_PUBLIC_API_BASE_URL
+      - name: Set API URL
         run: echo "NEXT_PUBLIC_API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}" >> $GITHUB_ENV
+      - run: pnpm install
       - run: pnpm --filter frontend run lint
       - run: pnpm --filter frontend run test
       - run: pnpm --filter frontend run build
-      - run: npx @railway/cli up --service frontend --yes
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_SECRET_KEY }}
+      - run: railway up --service=frontend
 
   backend:
     needs: setup
     runs-on: ubuntu-latest
+    container: ghcr.io/railwayapp/cli:latest
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_SECRET_KEY }}
+      SVC_ID: backend
     steps:
       - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 10.13.1
       - run: pnpm install
       - run: pnpm --filter backend prisma:gen
       - run: pnpm --filter backend prisma:push
       - run: pnpm --filter backend lint
       - run: pnpm --filter backend run build
-      - run: npx @railway/cli up --service backend --yes
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_SECRET_KEY }}
+      - run: railway up --service=backend
