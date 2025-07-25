@@ -31,6 +31,8 @@ jobs:
         with:
           version: 10.13.1
       - run: pnpm install
+      - name: Set NEXT_PUBLIC_API_BASE_URL
+        run: echo "NEXT_PUBLIC_API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}" >> $GITHUB_ENV
       - run: pnpm --filter frontend run lint
       - run: pnpm --filter frontend run test
       - run: pnpm --filter frontend run build
