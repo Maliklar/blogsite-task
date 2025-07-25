@@ -31,6 +31,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container: ghcr.io/railwayapp/cli:latest
+    environment: production
     env:
       RAILWAY_TOKEN: ${{ secrets.RAILWAY_SECRET_KEY }}
       SVC_ID: frontend
@@ -42,12 +43,13 @@ jobs:
       - run: pnpm --filter frontend run lint
       - run: pnpm --filter frontend run test
       - run: pnpm --filter frontend run build
-      - run: railway up --service=frontend
+      - run: railway up --service=${{ env.SVC_ID }}
 
   backend:
     needs: setup
     runs-on: ubuntu-latest
     container: ghcr.io/railwayapp/cli:latest
+    environment: production
     env:
       RAILWAY_TOKEN: ${{ secrets.RAILWAY_SECRET_KEY }}
       SVC_ID: backend
@@ -58,4 +60,4 @@ jobs:
       - run: pnpm --filter backend prisma:push
       - run: pnpm --filter backend lint
       - run: pnpm --filter backend run build
-      - run: railway up --service=backend
+      - run: railway up --service=${{ env.SVC_ID }}
