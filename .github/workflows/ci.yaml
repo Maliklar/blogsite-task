@@ -32,7 +32,9 @@ jobs:
 
       - name: Railway Login
         if: github.event_name == 'push'
-        run: npx @railway/cli login --token=${{ secrets.RAILWAY_SECRET_KEY }}
+        run: npx @railway/cli login
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_SECRET_KEY }}
 
   frontend:
     needs: setup
