@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     env:
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_SECRET_KEY }}
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_FRONTEND_TOKEN }}
       SVC_ID: frontend
     steps:
       - uses: actions/checkout@v3
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     env:
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_SECRET_KEY }}
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_BACKEND_TOKEN }}
       SVC_ID: backend-service
     steps:
       - uses: actions/checkout@v3
