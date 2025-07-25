@@ -8,7 +8,6 @@ export default function Home() {
         <h1 className="text-2xl font-bold">Home Page</h1>
         <Link href="/blogs">Blogs</Link>
         <Link href="/users">Users</Link>
-        test build
       </Container>
     </>
   );

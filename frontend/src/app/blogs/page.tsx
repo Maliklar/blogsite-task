@@ -9,7 +9,7 @@ type Props = {
 export default async function BlogsPage({ searchParams }: Props) {
   const { page, pageSize } = await searchParams;
   const { data } = await api.blogs.getAll({ page, pageSize });
-  const blogs = data.data;
+  const blogs = data?.data;
 
   return (
     <>
