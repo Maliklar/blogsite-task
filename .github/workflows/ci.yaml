@@ -27,15 +27,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - uses: pnpm/action-setup@v2
         with:
           version: 10.13.1
-
       - run: pnpm install
       - run: pnpm --filter frontend run lint
       - run: pnpm --filter frontend run test
       - run: pnpm --filter frontend run build
+      - run: pnpm --filter frontend dlx railway login --token=${{ secrets.RAILWAY_SECRET_KEY }}
+      - run: pnpm --filter frontend dlx railway up --service frontend --yes
 
   backend:
     needs: setup
@@ -52,6 +52,6 @@ jobs:
       - run: pnpm --filter backend prisma:push
       - run: pnpm --filter backend lint
       - run: pnpm --filter backend run build
-      - run: pnpm --filter backend dlx railway login --token=31007890-32ab-4a2d-ac3c-9dfb585ca184
+      - run: pnpm --filter backend dlx railway login --token=${{RAILWAY_SECRET_KEY}}
       - run: pnpm --filter backend dlx railway up --service backend --yes
 
