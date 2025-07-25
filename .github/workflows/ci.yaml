@@ -1,0 +1,50 @@
+name: Fullstack CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10.13.1
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - run: pnpm install
+
+  frontend:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10.13.1
+
+      - run: pnpm install
+      - run: pnpm --filter frontend run build
+      - run: pnpm --filter frontend run test
+
+  backend:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10.13.1
+
+      - run: pnpm install
+      - run: pnpm --filter backend run build
