@@ -4,7 +4,15 @@ on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, synchronize]
 
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+  deployments: write
+  id-token: write
+  
 jobs:
   setup:
     runs-on: ubuntu-latest
