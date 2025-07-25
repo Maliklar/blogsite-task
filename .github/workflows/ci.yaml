@@ -32,7 +32,7 @@ jobs:
 
       - name: Railway Login
         if: github.event_name == 'push'
-        run: pnpm dlx railway login --token=${{ secrets.RAILWAY_SECRET_KEY }}
+        run: npx @railway/cli login --token=${{ secrets.RAILWAY_SECRET_KEY }}
 
   frontend:
     needs: setup
@@ -48,7 +48,7 @@ jobs:
       - run: pnpm --filter frontend run lint
       - run: pnpm --filter frontend run test
       - run: pnpm --filter frontend run build
-      - run: pnpm --workspace-root dlx railway up --service frontend --yes
+      - run: npx @railway/cli up --service frontend --yes
 
   backend:
     needs: setup
@@ -63,4 +63,4 @@ jobs:
       - run: pnpm --filter backend prisma:push
       - run: pnpm --filter backend lint
       - run: pnpm --filter backend run build
-      - run: pnpm --workspace-root dlx railway up --service backend --yes
+      - run: npx @railway/cli up --service backend --yes
