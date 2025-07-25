@@ -35,47 +35,28 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     environment: production
-    env:
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_FRONTEND_TOKEN }}
-      SVC_ID: frontend
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
         with:
           version: 10.13.1
-
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Set API URL
-        run: echo "NEXT_PUBLIC_API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}" >> $GITHUB_ENV
-      - name: Install pnpm
-        run: corepack enable && corepack prepare pnpm@10.13.1 --activate
       - run: pnpm --filter frontend install
       - run: pnpm --filter frontend run lint
       - run: pnpm --filter frontend run test
       - run: pnpm --filter frontend run build
-      - run: railway up --service=${{ env.SVC_ID }} --detach
 
   backend:
     needs: setup
     runs-on: ubuntu-latest
     environment: production
-    env:
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_BACKEND_TOKEN }}
-      SVC_ID: backend-service
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
         with:
           version: 10.13.1
-
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
 
       - run: pnpm --filter backend install
       - run: pnpm --filter backend prisma:gen
       - run: pnpm --filter backend prisma:push
       - run: pnpm --filter backend lint
       - run: pnpm --filter backend run build
-      - run: railway up --service=${{ env.SVC_ID }} --detach
