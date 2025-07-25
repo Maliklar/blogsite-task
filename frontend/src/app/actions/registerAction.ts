@@ -31,10 +31,10 @@ export default async function registerAction(formData: FormData) {
 
   try {
     const { data } = await api.auth.register({
-      firstName: firstName.toString(),
+      firstName: firstName?.toString(),
       lastName: lastName?.toString(),
-      email: email.toString(),
-      password: password.toString(),
+      email: email?.toString(),
+      password: password?.toString(),
     });
 
     const cookie = await cookies();

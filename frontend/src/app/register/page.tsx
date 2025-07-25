@@ -20,9 +20,9 @@ type Props = {
 
 export default async function RegisterPage({ searchParams }: Props) {
   const params = await searchParams;
-  const emailError = params.email;
-  const passwordError = params.password;
-  const firstNameError = params.firstName;
+  const emailError = params?.email;
+  const passwordError = params?.password;
+  const firstNameError = params?.firstName;
   const messageError = params?.message;
 
   const user = await getUser();
