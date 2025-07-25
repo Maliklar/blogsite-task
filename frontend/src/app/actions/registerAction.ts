@@ -18,11 +18,19 @@ export default async function registerAction(formData: FormData) {
   const email = formData.get("email");
   const password = formData.get("password");
 
-  if (!firstName || !email || !password) {
+  if (
+    !firstName ||
+    !email ||
+    !password ||
+    (password && password?.toString().length < 8)
+  ) {
     const errors: FieldsErrors = {};
     if (!firstName) errors.firstName = "Required Field";
     if (!email) errors.email = "Required Field";
     if (!password) errors.password = "Required Field";
+    if (password && password.toString().length < 8)
+      errors.password = "Password must be more than 8 characters in length";
+
     const errorString = Object.entries(errors)
       .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
       .join("&");
