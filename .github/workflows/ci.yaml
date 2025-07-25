@@ -12,7 +12,7 @@ permissions:
   actions: read
   deployments: write
   id-token: write
-  
+
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -30,6 +30,10 @@ jobs:
 
       - run: pnpm install
 
+      - name: Railway Login
+        if: github.event_name == 'push'
+        run: pnpm dlx railway login --token=${{ secrets.RAILWAY_SECRET_KEY }}
+
   frontend:
     needs: setup
     runs-on: ubuntu-latest
@@ -44,24 +48,19 @@ jobs:
       - run: pnpm --filter frontend run lint
       - run: pnpm --filter frontend run test
       - run: pnpm --filter frontend run build
-      - run: pnpm --filter frontend dlx railway login --token=${{ secrets.RAILWAY_SECRET_KEY }}
-      - run: pnpm --filter frontend dlx railway up --service frontend --yes
+      - run: pnpm --workspace-root dlx railway up --service frontend --yes
 
   backend:
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - uses: pnpm/action-setup@v2
         with:
           version: 10.13.1
-
       - run: pnpm install
       - run: pnpm --filter backend prisma:gen
       - run: pnpm --filter backend prisma:push
       - run: pnpm --filter backend lint
       - run: pnpm --filter backend run build
-      - run: pnpm --filter backend dlx railway login --token=${{ secrets.RAILWAY_SECRET_KEY }}
-      - run: pnpm --filter backend dlx railway up --service backend --yes
-
+      - run: pnpm --workspace-root dlx railway up --service backend --yes
