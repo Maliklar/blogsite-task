@@ -78,4 +78,6 @@ jobs:
       - run: pnpm --filter backend prisma:push
       - run: pnpm --filter backend lint
       - run: pnpm --filter backend run build
-      - run: railway up --service=${{ env.SVC_ID }} --detach
+      - run: |
+          tar -czf deploy.tar.gz dist/ node_modules/ package.json pnpm-lock.yaml
+          railway up --service=${{ env.SVC_ID }} --detach --no-build --environment=production
