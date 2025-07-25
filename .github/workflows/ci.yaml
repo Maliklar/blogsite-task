@@ -24,7 +24,6 @@ jobs:
         with:
           version: 10.13.1
 
-      - run: npm install -g @railway/cli
       - uses: actions/setup-node@v3
         with:
           node-version: 20
@@ -42,6 +41,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
+      - uses: railwayapp/cli-action@v1
+
         with:
           version: 10.13.1
 
@@ -49,7 +50,7 @@ jobs:
         run: echo "NEXT_PUBLIC_API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}" >> $GITHUB_ENV
       - name: Install pnpm
         run: corepack enable && corepack prepare pnpm@10.13.1 --activate
-      - run: pnpm --filter install
+      - run: pnpm --filter frontend install
       - run: pnpm --filter frontend run lint
       - run: pnpm --filter frontend run test
       - run: pnpm --filter frontend run build
@@ -66,6 +67,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
+      - uses: railwayapp/cli-action@v1
+
         with:
           version: 10.13.1
       - run: pnpm --filter backend install
