@@ -30,12 +30,6 @@ jobs:
 
       - run: pnpm install
 
-      - name: Railway Login
-        if: github.event_name == 'push'
-        run: npx @railway/cli login
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_SECRET_KEY }}
-
   frontend:
     needs: setup
     runs-on: ubuntu-latest
@@ -51,6 +45,8 @@ jobs:
       - run: pnpm --filter frontend run test
       - run: pnpm --filter frontend run build
       - run: npx @railway/cli up --service frontend --yes
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_SECRET_KEY }}
 
   backend:
     needs: setup
@@ -66,3 +62,5 @@ jobs:
       - run: pnpm --filter backend lint
       - run: pnpm --filter backend run build
       - run: npx @railway/cli up --service backend --yes
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_SECRET_KEY }}
